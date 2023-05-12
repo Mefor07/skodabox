@@ -370,10 +370,11 @@ class MainActivity : AppCompatActivity(){
 
 
             // Calculate the right edge of the RecyclerView
-            val recyclerViewLeft = recyclerView.left /* recyclerView.width*/
-            //viewHolder.itemView.bringToFront()
+            val recyclerViewLeft = recyclerView.right + recyclerView.width
+
+            Log.d("LE",""+itemLeft)
             // Check if the item has touched the right edge of the RecyclerView
-            if (!isDraggedOutFromLeft && itemLeft <= recyclerViewLeft) {
+            if (!isDraggedOutFromLeft && itemLeft <= 93) {
                 // Item has touched the left edge
                 // Do something here
 
