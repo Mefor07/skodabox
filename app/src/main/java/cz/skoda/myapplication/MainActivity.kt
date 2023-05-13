@@ -367,6 +367,10 @@ class MainActivity : AppCompatActivity(){
 
 
     //second Touch helper callback
+    //No need to use Two ItemTouchHelperCallBack classes,
+  // i had to modify one ItemTouchHelperCallBack to handle the drag event for the two recycler views
+
+    /*
     class MyItemTouchHelperCallback2(private val mContext: MainActivity, private val mAdapter: InstallAppsAdapter, private val mAdapter2: SelectedAppsAdapter, val recyc2:RecyclerView) : ItemTouchHelper.Callback() {
 
         private var isDraggedOutFromLeft = false
@@ -505,5 +509,6 @@ class MainActivity : AppCompatActivity(){
 
 
     }
+    */
 
 }
