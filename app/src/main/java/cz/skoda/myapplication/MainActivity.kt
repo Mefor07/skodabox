@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(){
         // Create ItemTouchHelpers and attach to RecyclerViews
 
         val myItemTouchHelperCallback = MyItemTouchHelperCallback(this, adapter1, adapter2, appListRecyclerView2)
-        val myItemTouchHelperCallback2 = MyItemTouchHelperCallback2(
+        val myItemTouchHelperCallback2 = MyItemTouchHelperCallback(
             this,
             adapter1,
             adapter2,
@@ -205,6 +205,7 @@ class MainActivity : AppCompatActivity(){
     class MyItemTouchHelperCallback(val mContext: Context, private val mAdapter: InstallAppsAdapter, private val mAdapter2: SelectedAppsAdapter, val recyc2:RecyclerView) : ItemTouchHelper.Callback() {
 
         private var isDraggedOut = false
+        private var isDraggedOutFromLeft = false
 
         override fun isLongPressDragEnabled(): Boolean {
             return true
@@ -221,7 +222,13 @@ class MainActivity : AppCompatActivity(){
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            mAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+
+            if(recyclerView.id == R.id.installedAppsRecyclerView){
+                mAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }else if(recyclerView.id == R.id.selectedAppsRecyclerView2){
+                mAdapter2.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }
+
             return true
         }
 
@@ -241,38 +248,93 @@ class MainActivity : AppCompatActivity(){
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 
 
-            val itemView = viewHolder.itemView
+//            val itemView = viewHolder.itemView
+//            // Calculate the current position of the item being dragged
+//            val itemRight = itemView.left + dX + itemView.width
+//            // Calculate the right edge of the RecyclerView
+//            val recyclerViewRight = recyclerView.left + recyclerView.width
+//            // Check if the item has touched the right edge of the RecyclerView
+//            if (!isDraggedOut && itemRight >= recyclerViewRight) {
+//                // Item has touched the right edge
+//
+//                Log.d("RECYC", "Dragged out")
+//                val fromPosition = viewHolder.adapterPosition
+//                val appToAdd = mAdapter.getItem(fromPosition)
+//                mAdapter.notifyDataSetChanged()
+//                Log.d("APPTOADD", ""+appToAdd.appName)
+//                mAdapter2.addApp(0, appToAdd)
+//                isDraggedOut = true
+//                mAdapter.removeItem(fromPosition)
+//
+//
+//
+//
+//            } else {
+//                // Item has not touched the right edge
+//                // Do something else here
+//            }
 
 
-            // Calculate the current position of the item being dragged
-            val itemRight = itemView.left + dX + itemView.width
 
-            // Calculate the right edge of the RecyclerView
-            val recyclerViewRight = recyclerView.left + recyclerView.width
-            // Check if the item has touched the right edge of the RecyclerView
-            if (!isDraggedOut && itemRight >= recyclerViewRight) {
-                // Item has touched the right edge
+              if(recyclerView.id == R.id.installedAppsRecyclerView){
+                  val itemView = viewHolder.itemView
+                  // Calculate the current position of the item being dragged
+                  val itemRight = itemView.left + dX + itemView.width
+                  // Calculate the right edge of the RecyclerView
+                  val recyclerViewRight = recyclerView.left + recyclerView.width
+                  // Check if the item has touched the right edge of the RecyclerView
+                  if (!isDraggedOut && itemRight >= recyclerViewRight) {
+                      // Item has touched the right edge
 
-                Log.d("RECYC", "Dragged out")
-
-                val fromPosition = viewHolder.adapterPosition
-
-
-                val appToAdd = mAdapter.getItem(fromPosition)
-                mAdapter.notifyDataSetChanged()
-                Log.d("APPTOADD", ""+appToAdd.appName)
-                mAdapter2.addApp(0, appToAdd)
-                isDraggedOut = true
-
-                mAdapter.removeItem(fromPosition)
+                      Log.d("RECYC", "Dragged out")
+                      val fromPosition = viewHolder.adapterPosition
+                      val appToAdd = mAdapter.getItem(fromPosition)
+                      mAdapter.notifyDataSetChanged()
+                      Log.d("APPTOADD", ""+appToAdd.appName)
+                      mAdapter2.addApp(0, appToAdd)
+                      isDraggedOut = true
+                      mAdapter.removeItem(fromPosition)
 
 
 
 
-            } else {
-                // Item has not touched the right edge
-                // Do something else here
-            }
+                 } else {
+                     // Item has not touched the right edge
+                     // Do something else here
+                 }
+                 Log.d("DragItem", "We are talking of the right RecyclerView"+dX)
+
+              }else if(recyclerView.id == R.id.selectedAppsRecyclerView2){
+
+                  val itemView = viewHolder.itemView
+                  // Calculate the current position of the item being dragged
+                  val itemLeft = itemView.left + dX
+
+                  // Calculate the left edge of the RecyclerView
+                  val recyclerViewLeft = recyclerView.left
+
+                  // Check if the item has touched or crossed the left edge of the RecyclerView
+                  if (!isDraggedOutFromLeft && itemLeft <= recyclerViewLeft) {
+
+                      Log.d("RECYC", "Dragged out from the left side")
+                      val fromPosition = viewHolder.adapterPosition
+//
+//
+                    val appToAdd = mAdapter2.getItem(fromPosition)
+
+                    appToAdd?.let { mAdapter.addApp(fromPosition, it) }
+                    //isDraggedOutFromLeft = true
+
+
+                    mAdapter2.removeItem(fromPosition)
+
+                      isDraggedOutFromLeft = true
+                  }else{
+
+                  }
+
+                 //Log.d("DragItem", "We are talking  of the left RecyclerView"+dX)
+              }
 
 
 
@@ -285,6 +347,7 @@ class MainActivity : AppCompatActivity(){
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             isDraggedOut = false
+            isDraggedOutFromLeft = false
 
         }
 
@@ -358,57 +421,75 @@ class MainActivity : AppCompatActivity(){
                 isCurrentlyActive
             )
 
-            //Log.d("LEF", "Dragged out")
-            val itemView = viewHolder.itemView
+//            //Log.d("LEF", "Dragged out")
+//            val itemView = viewHolder.itemView
+//
+//            // Calculate the current position of the item being dragged
+//            val itemLeft = itemView.left + dX
+//            val desiredPosition = recyclerView.width / 1
+//
+//            // Calculate the right edge of the RecyclerView
+//            val recyclerViewLeft = recyclerView.right + recyclerView.width
+//
+//
+//
+//
+//            // Calculate the right edge of the RecyclerView
+//
+//            Log.d("LE", ""+itemView.left+dX)
+//            // Check if the item has touched the right edge of the RecyclerView
+//            if (dX < -2/*!isDraggedOutFromLeft && itemLeft <= desiredPosition*/) {
+//                // Item has touched the left edge
+//                // Do something here
+//
+//                    val fromPosition = viewHolder.adapterPosition
+//
+//
+//                    val appToAdd = mAdapter2.getItem(fromPosition)
+//
+//                    appToAdd?.let { mAdapter.addApp(fromPosition, it) }
+//                    isDraggedOutFromLeft = true
+//
+//
+//                    mAdapter2.removeItem(fromPosition)
+//
+//                    Log.d("LEFT", "item touched left edge"+fromPosition)
+//
+//                // Item has touched the left edge
+//
+//
+//            } else {
+//                // Item has not touched the right edge
+//                // Do something else here
+//            }
 
+            if (recyclerView.id == R.id.selectedAppsRecyclerView2){
+                val itemView = viewHolder.itemView
 
+                val itemLeft = itemView.left
+                // Calculate the right edge of the RecyclerView
+                val recyclerViewLeft = recyclerView.left
+                // Check if the item has touched the right edge of the RecyclerView
+                if (!isDraggedOutFromLeft && itemLeft < recyclerViewLeft) {
 
-            // Calculate the current position of the item being dragged
-            val itemLeft = itemView.right + dX
+                    Log.d("DragItem", "Item dragged to the left edge of the left RecyclerView"+itemLeft)
 
-
-
-
-            // Calculate the right edge of the RecyclerView
-            val recyclerViewLeft = recyclerView.right + recyclerView.width
-
-            Log.d("LE",""+itemLeft)
-            // Check if the item has touched the right edge of the RecyclerView
-            if (!isDraggedOutFromLeft && itemLeft <= 93) {
-                // Item has touched the left edge
-                // Do something here
-
-                //Log.d("RECYC", "Dragged out")
-
-
-                    val fromPosition = viewHolder.adapterPosition
-
-
-                    val appToAdd = mAdapter2.getItem(fromPosition)
-
-                    appToAdd?.let { mAdapter.addApp(fromPosition, it) }
-                    //mAdapter.notifyDataSetChanged()
-
-                    //mAdapter2.removeItem(fromPosition)
-                    //mAdapter2.notifyDataSetChanged()
-
-                    isDraggedOutFromLeft = true
-
-
-                    mAdapter2.removeItem(fromPosition)
-
-                    Log.d("LEFT", "item touched left edge"+fromPosition)
-
-                // Item has touched the left edge
-
-
-
-
-            } else {
-                // Item has not touched the right edge
-                // Do something else here
+                }
             }
-
+//            val itemView = viewHolder.itemView
+//            if (recyclerView.id == R.id.selectedAppsRecyclerView2) {
+//                val itemView = viewHolder.itemView
+//                val recyclerViewLeft = recyclerView.left
+//
+//                // Calculate the current position of the item being dragged
+//                //val itemLeft = itemView.left + dX
+//
+//                if (dX < 0) {
+//                    // Item has been dragged to the left edge of the left RecyclerView
+//                    // Perform your action here
+//                    Log.d("DragItem", "Item dragged to the left edge of the left RecyclerView"+dX)
+//                }
+//            }
 
         }
 
@@ -417,6 +498,10 @@ class MainActivity : AppCompatActivity(){
             isDraggedOutFromLeft = false
 
         }
+
+
+
+
 
 
     }

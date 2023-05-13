@@ -27,8 +27,8 @@
         android:layout_weight="1"
         android:background="@drawable/custom_border"
         android:layout_margin="10dp"
-        android:clipToPadding="true"
-        android:clipChildren="true"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         android:paddingLeft="40dp"
         android:paddingStart="40dp"
         android:paddingEnd="10dp"  />
