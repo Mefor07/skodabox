@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:longClickable="true"
         android:background="@drawable/custom_border"
         android:clipToPadding="true"
@@ -27,11 +27,11 @@
         android:layout_weight="1"
         android:longClickable="true"
         android:background="@drawable/custom_border"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:clipToPadding="true"
         android:clipChildren="true"
-        android:paddingLeft="0dp"
-        android:paddingStart="0dp"
+        android:paddingLeft="40dp"
+        android:paddingStart="40dp"
         android:paddingEnd="10dp"  />
 
 
