@@ -16,8 +16,8 @@
         android:layout_margin="10dp"
         android:longClickable="true"
         android:background="@drawable/custom_border"
-        android:clipToPadding="false"
-        android:clipChildren="false"
+        android:clipToPadding="true"
+        android:clipChildren="true"
         android:paddingEnd="10dp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,12 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:longClickable="true"
         android:background="@drawable/custom_border"
         android:layout_margin="10dp"
-        android:clipToPadding="false"
-        android:clipChildren="false"
-        android:paddingLeft="40dp"
-        android:paddingStart="40dp"
+        android:clipToPadding="true"
+        android:clipChildren="true"
+        android:paddingLeft="0dp"
+        android:paddingStart="0dp"
         android:paddingEnd="10dp"  />
 
 

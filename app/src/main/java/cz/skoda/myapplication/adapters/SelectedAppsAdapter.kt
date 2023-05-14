@@ -2,6 +2,7 @@ package cz.skoda.myapplication.adapters
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import cz.skoda.myapplication.R
+import cz.skoda.myapplication.interfaces.ItemTouchHelperViewHolder
 import cz.skoda.myapplication.models.App
 import cz.skoda.myapplication.models.SelectedApp
 import java.util.*
@@ -25,13 +27,12 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
     }
     //private val apps = ArrayList<SelectedApp>()
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val appNameTextView: TextView = itemView.findViewById(R.id.appName)
-        val appDescTextView: TextView = itemView.findViewById(R.id.app_des)
-    }
+//    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.app_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.app_item2, parent, false)
         return ViewHolder(view)
     }
 
@@ -63,6 +64,7 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
             }
         }
         notifyItemMoved(fromPosition, toPosition)
+        persistSelectedApps()
     }
 
     fun showMessage(appName:String, position:Int){
@@ -70,10 +72,6 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
     }
 
 
-//    fun addApp(app: String) {
-//        apps.add(app)
-//        notifyItemInserted(apps.size - 1)
-//    }
 
     fun addApp(toPosition: Int, app: App) {
         val app = SelectedApp(app.appName)
@@ -97,18 +95,16 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
         persistSelectedApps()
     }
 
-    fun getItem(position: Int): SelectedApp? {
+    fun getItem(position: Int): SelectedApp {
 
-//        if(selectedAppList.size != 0){
-//            return selectedAppList[position]
+
+//        return if (position in 0 until selectedAppList.size) {
+//            selectedAppList[position]
+//        } else {
+//            null
 //        }
-//        return null
 
-        return if (position in 0 until selectedAppList.size) {
-            selectedAppList[position]
-        } else {
-            null
-        }
+        return  selectedAppList[position]
 
     }
 
@@ -121,18 +117,9 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
 
 
 
-//    fun removeApp(position: Int) {
-//        apps.removeAt(position)
-//        notifyItemRemoved(position)
-//    }
 
-//    fun removeItem(position: Int): SelectedApp {
-//        val appInfo = selectedAppList.removeAt(position)
-//        notifyItemRemoved(position)
-//        return appInfo
-//    }
 
-    fun removeItem(position: Int): SelectedApp? {
+    fun removeItem(position: Int): SelectedApp {
 //        var appInfo: SelectedApp
 //        if(position > 0) {
 //            appInfo = selectedAppList.removeAt(position)
@@ -143,13 +130,19 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
 //
 //        return appInfo
 
-        var appInfo: SelectedApp? = null
-        if (position in 0 until selectedAppList.size) {
-            appInfo = selectedAppList.removeAt(position)
-            notifyItemRemoved(position)
-            Log.d("APPREM", "" + selectedAppList.size)
-            persistSelectedApps()
-        }
+//        var appInfo: SelectedApp? = null
+//        if (position in 0 until selectedAppList.size) {
+//            appInfo = selectedAppList.removeAt(position)
+//            notifyItemRemoved(position)
+//            Log.d("APPREM", "" + selectedAppList.size)
+//            persistSelectedApps()
+//        }
+//        return appInfo
+
+        val appInfo = selectedAppList.removeAt(position)
+        notifyItemRemoved(position)
+        Log.d("APPREM", ""+selectedAppList.size)
+        persistSelectedApps()
         return appInfo
 
     }
@@ -167,5 +160,22 @@ class SelectedAppsAdapter(private val context: Context, private val selectedAppL
         editor.apply()
 
         Toast.makeText(context, "WE updated the presfs", Toast.LENGTH_LONG).show()
+    }
+
+
+
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        ItemTouchHelperViewHolder {
+        val appNameTextView: TextView = itemView.findViewById(R.id.appName)
+        val appDescTextView: TextView = itemView.findViewById(R.id.app_des)
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+
+        override fun onItemClear() {
+            itemView.setBackgroundColor(0)
+        }
     }
 }
