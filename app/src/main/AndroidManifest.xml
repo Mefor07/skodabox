@@ -26,14 +26,14 @@
             android:exported="true"
             android:theme="@style/Theme.SkodaCar"
             android:screenOrientation="landscape">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
-            </intent-filter>
+            </intent-filter>-->
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -48,6 +48,23 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".Splash"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
+
+
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
